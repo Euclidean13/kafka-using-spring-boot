@@ -2,6 +2,7 @@ package com.learnkafka.libraryeventsproducer.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.learnkafka.libraryeventsproducer.domain.LibraryEvent;
+import com.learnkafka.libraryeventsproducer.domain.LibraryEventType;
 import com.learnkafka.libraryeventsproducer.producer.LibraryEventProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,8 +26,7 @@ public class LibraryEventsController {
     ) throws JsonProcessingException, ExecutionException, InterruptedException, TimeoutException {
 
         // invoke kafka producer
-        // libraryEventProducer.sendLibraryEvent(libraryEvent);
-        // libraryEventProducer.sendLibraryEventSynchronous(libraryEvent);
+        libraryEvent.setLibraryEventType(LibraryEventType.NEW);
         libraryEventProducer.sendLibraryEvent_Approach2(libraryEvent);
         return ResponseEntity.status(HttpStatus.CREATED).body(libraryEvent);
     }
