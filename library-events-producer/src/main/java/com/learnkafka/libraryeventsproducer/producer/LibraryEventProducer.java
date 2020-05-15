@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
+import java.util.concurrent.ExecutionException;
+
 @Component
 @Slf4j
 public class LibraryEventProducer {
@@ -39,6 +41,26 @@ public class LibraryEventProducer {
             }
         });
 
+    }
+
+    public SendResult<Integer, String> sendLibraryEventSynchronous(LibraryEvent libraryEvent)
+            throws JsonProcessingException, ExecutionException, InterruptedException {
+
+        Integer key = libraryEvent.getLibraryEventId();
+        String value = objectMapper.writeValueAsString(libraryEvent);
+        SendResult<Integer, String> sendResult = null;
+
+        try {
+            sendResult =  kafkaTemplate.sendDefault(key, value).get();
+        } catch (InterruptedException | ExecutionException e) {
+            log.error("ExecutionException/InterruptedException sending the message and the exception is {}",
+                    e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            log.error("Exception sending the message and the exception is {}", e.getMessage());
+            throw e;
+        }
+        return sendResult;
     }
 
     private void handleFailure(Integer key, String value, Throwable ex) {
