@@ -63,6 +63,14 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
+		<testResources>
+			<testResource>
+				<directory>${project.basedir}/src/test/java/unit</directory>
+			</testResource>
+			<testResource>
+				<directory>${project.basedir}/src/test/java/intg</directory>
+			</testResource>
+		</testResources>
 	</build>
 
 </project>
